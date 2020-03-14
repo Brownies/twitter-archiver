@@ -1,10 +1,12 @@
-import time
 import re
-from settings import BROWSER_WIDTH, BROWSER_HEIGHT, OPTIONS
+import time
+
 from selenium.webdriver import Firefox
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import WebDriverWait
+
+from settings import BROWSER_WIDTH, BROWSER_HEIGHT, OPTIONS
 
 
 def scrape_tweets(user):
