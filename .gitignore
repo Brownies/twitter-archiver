@@ -4,3 +4,4 @@ env/
 *.pyc
 *.ps1
 *.log
+*.db
