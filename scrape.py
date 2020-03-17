@@ -1,3 +1,4 @@
+import logging
 import re
 import time
 
@@ -7,11 +8,25 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 
-from settings import BROWSER_WIDTH, BROWSER_HEIGHT, OPTIONS
+from settings import BROWSER_WIDTH, BROWSER_HEIGHT, OPTIONS, LOG_LEVEL, LOG_FILE
+
+
+logger = logging.getLogger(__name__)
+logger.setLevel(LOG_LEVEL)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+ch = logging.StreamHandler()
+ch.setLevel(LOG_LEVEL)
+ch.setFormatter(formatter)
+logger.addHandler(ch)
+if LOG_FILE:
+    fh = logging.FileHandler(LOG_FILE)
+    fh.setLevel(LOG_LEVEL)
+    fh.setFormatter(formatter)
+    logger.addHandler(fh)
 
 
 def scrape_tweets(user, seen_tweets):
-    print("Scraping tweets by \"" + user + "\"")
+    logger.info("Scraping tweets by \"%s\"" % user)
     with Firefox(options=OPTIONS) as driver:
         try:
             driver.set_window_size(BROWSER_WIDTH, BROWSER_HEIGHT)
@@ -19,8 +34,8 @@ def scrape_tweets(user, seen_tweets):
             xpath = "//a[contains(@href, \"/" + user + "/status/\"" + ")]"
             WebDriverWait(driver, 5).until(lambda d: d.find_element_by_xpath(xpath))
         except WebDriverException as e:
-            print("Could not open page for \"" + user + "\"")
-            print(e.msg)
+            logger.error("Could not open page for \"%s\"" % user)
+            logger.error(e.msg)
             return []
 
         new_tweets = []
@@ -38,14 +53,16 @@ def scrape_tweets(user, seen_tweets):
                         if n not in seen_tweets:
                             seen_tweets.append(n)
                             new_tweets.append(n)
+                            logger.debug("Found a new tweet: %d" % n)
                 ActionChains(driver).send_keys(Keys.PAGE_DOWN, Keys.PAGE_DOWN).perform()
                 time.sleep(2)
                 current_scroll = driver.execute_script("return window.scrollY;")
                 max_scroll = driver.execute_script("return window.scrollMaxY;")
 
         except WebDriverException as e:
-            print("Error while scraping tweets for \"" + user + "\"")
-            print(e.msg)
+            logger.error("Error while scraping tweets for \"%s\"" % user)
+            logger.error(e.msg)
 
-        print("Found a total of " + str(len(new_tweets)) + " new tweets by \"" + user + "\"")
+        logger.info("Found %d new tweets by \"%s\"" % (len(new_tweets), user))
+        logger.debug("New tweets: %s" % new_tweets)
         return new_tweets
