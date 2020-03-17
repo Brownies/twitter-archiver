@@ -6,20 +6,10 @@ from selenium.common.exceptions import TimeoutException
 from selenium.webdriver import Firefox
 from selenium.webdriver.support.ui import WebDriverWait
 
-from settings import OPTIONS, LOG_LEVEL, LOG_FILE
+from settings import BROWSER_WIDTH, BROWSER_HEIGHT, OPTIONS
 
-logger = logging.getLogger(__name__)
-logger.setLevel(LOG_LEVEL)
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-ch = logging.StreamHandler()
-ch.setLevel(LOG_LEVEL)
-ch.setFormatter(formatter)
-logger.addHandler(ch)
-if LOG_FILE:
-    fh = logging.FileHandler(LOG_FILE)
-    fh.setLevel(LOG_LEVEL)
-    fh.setFormatter(formatter)
-    logger.addHandler(fh)
+
+logger = logging.getLogger("twitter-archiver")
 
 
 def archive_tweets(user, tweets):
@@ -31,6 +21,7 @@ def archive_tweets(user, tweets):
     save_button_xpath = "//input[contains(@class, \"web-save-button\") and @type=\"submit\"]"
     done_xpath = "//span[contains(@class, \"label-success\")]"
     with Firefox(options=OPTIONS) as driver:
+        driver.set_window_size(BROWSER_WIDTH, BROWSER_HEIGHT)
         for tweet in tweets:
             time.sleep(1)
             r = get("https://archive.org/wayback/available?url=https://twitter.com/" + user + "/status/" + str(tweet))

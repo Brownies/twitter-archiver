@@ -13,6 +13,7 @@ BROWSER_HEIGHT = 1080
 _HEADLESS = False
 DATABASE_ADDRESS = "sqlite:///twitter-archiver.db"
 LOG_LEVEL = logging.DEBUG
+DB_LOG_LEVEL = logging.INFO
 LOG_FILE = "logs/twitter-archiver.log"  # Leave empty to not log to a file
 
 

@@ -1,13 +1,27 @@
 import logging
+from logging.handlers import TimedRotatingFileHandler
 
 from sqlalchemy import create_engine, Table, Column, String, Integer, MetaData, select
 
 from scrape import scrape_tweets
-from settings import USERS, DATABASE_ADDRESS
+from settings import USERS, DATABASE_ADDRESS, LOG_LEVEL, LOG_FILE, DB_LOG_LEVEL
 from wayback_machine import archive_tweets
 
-logging.basicConfig()
-logging.getLogger("sqlalchemy.engine").setLevel(logging.INFO)
+
+logger = logging.getLogger("twitter-archiver")
+logger.setLevel(LOG_LEVEL)
+formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+ch = logging.StreamHandler()
+ch.setLevel(LOG_LEVEL)
+ch.setFormatter(formatter)
+logger.addHandler(ch)
+if LOG_FILE:
+    fh = TimedRotatingFileHandler(LOG_FILE, when="D", backupCount=2)
+    fh.setLevel(LOG_LEVEL)
+    fh.setFormatter(formatter)
+    logger.addHandler(fh)
+logging.getLogger("sqlalchemy.engine").setLevel(DB_LOG_LEVEL)
+
 
 engine = create_engine(DATABASE_ADDRESS)
 metadata = MetaData()

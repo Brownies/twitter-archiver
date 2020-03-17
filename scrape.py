@@ -8,21 +8,10 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 
-from settings import BROWSER_WIDTH, BROWSER_HEIGHT, OPTIONS, LOG_LEVEL, LOG_FILE
+from settings import BROWSER_WIDTH, BROWSER_HEIGHT, OPTIONS
 
 
-logger = logging.getLogger(__name__)
-logger.setLevel(LOG_LEVEL)
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-ch = logging.StreamHandler()
-ch.setLevel(LOG_LEVEL)
-ch.setFormatter(formatter)
-logger.addHandler(ch)
-if LOG_FILE:
-    fh = logging.FileHandler(LOG_FILE)
-    fh.setLevel(LOG_LEVEL)
-    fh.setFormatter(formatter)
-    logger.addHandler(fh)
+logger = logging.getLogger("twitter-archiver")
 
 
 def scrape_tweets(user, seen_tweets):
