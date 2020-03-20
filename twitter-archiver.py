@@ -9,18 +9,19 @@ from wayback_machine import archive_tweets
 
 
 logger = logging.getLogger("twitter-archiver")
+db_logger = logging.getLogger("sqlalchemy.engine")
 logger.setLevel(LOG_LEVEL)
+db_logger.setLevel(DB_LOG_LEVEL)
 formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 ch = logging.StreamHandler()
-ch.setLevel(LOG_LEVEL)
 ch.setFormatter(formatter)
 logger.addHandler(ch)
+db_logger.addHandler(ch)
 if LOG_FILE:
     fh = TimedRotatingFileHandler(LOG_FILE, when="D", backupCount=2)
-    fh.setLevel(LOG_LEVEL)
     fh.setFormatter(formatter)
     logger.addHandler(fh)
-logging.getLogger("sqlalchemy.engine").setLevel(DB_LOG_LEVEL)
+    db_logger.addHandler(fh)
 
 
 engine = create_engine(DATABASE_ADDRESS)
