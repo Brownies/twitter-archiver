@@ -9,10 +9,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from settings import BROWSER_WIDTH, BROWSER_HEIGHT, OPTIONS
 
 
-logger = logging.getLogger("twitter-archiver")
-
-
 def archive_tweets(user, tweets):
+    logger = logging.getLogger("twitter-archiver")
     logger.info("Archiving %d tweets by %s (Wayback Machine, web.archive.org)" % (len(tweets), user))
     successfully_archived = []
     already_archived = []
@@ -20,12 +18,15 @@ def archive_tweets(user, tweets):
     input_id = "web-save-url-input"
     save_button_xpath = "//input[contains(@class, \"web-save-button\") and @type=\"submit\"]"
     done_xpath = "//span[contains(@class, \"label-success\")]"
-    with Firefox(options=OPTIONS) as driver:
-        driver.set_window_size(BROWSER_WIDTH, BROWSER_HEIGHT)
+
+    def _archive():
         for tweet in tweets:
             time.sleep(1)
             r = get("https://archive.org/wayback/available?url=https://twitter.com/" + user + "/status/" + str(tweet))
-            if r.json()['archived_snapshots']:
+            if r.status_code != 200:
+                logger.error("Unable to check if tweet %d is already archived" % tweet)
+                failed.append(tweet)
+            elif r.json()['archived_snapshots']:
                 already_archived.append(tweet)
                 logger.debug("Tweet %d already archived" % tweet)
             else:
@@ -44,6 +45,16 @@ def archive_tweets(user, tweets):
                     failed.append(tweet)
                     logger.error("Failed to archive tweet %d by %s" % (tweet, user))
                     logger.error(e)
+
+    with Firefox(options=OPTIONS) as driver:
+        driver.set_window_size(BROWSER_WIDTH, BROWSER_HEIGHT)
+        _archive()
+        if failed:
+            logger.info("Retrying %d tweets" % len(failed))
+            logger.debug("Retrying tweets %s" % failed)
+            tweets = failed
+            failed = []
+            _archive()
 
     logger.info("%d tweets failed to archive." % len(failed))
     logger.info("%d tweets already archived." % len(already_archived))

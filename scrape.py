@@ -11,10 +11,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from settings import BROWSER_WIDTH, BROWSER_HEIGHT, OPTIONS
 
 
-logger = logging.getLogger("twitter-archiver")
-
-
 def scrape_tweets(user, seen_tweets):
+    logger = logging.getLogger("twitter-archiver")
     logger.info("Scraping tweets by \"%s\"" % user)
     with Firefox(options=OPTIONS) as driver:
         try:
