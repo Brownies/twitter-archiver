@@ -8,14 +8,14 @@ USERS = [
     "michaelmontano",
     "nedsegal"
 ]
+DATABASE_ADDRESS = "sqlite:///twitter-archiver.db"
+LOG_FILE = "logs/twitter-archiver.log"  # Leave empty to not log to a file
+_HEADLESS = True
+LOG_LEVEL = logging.INFO
+DB_LOG_LEVEL = logging.WARN
+
+
 BROWSER_WIDTH = 1920
 BROWSER_HEIGHT = 1080
-_HEADLESS = False
-DATABASE_ADDRESS = "sqlite:///twitter-archiver.db"
-LOG_LEVEL = logging.DEBUG
-DB_LOG_LEVEL = logging.INFO
-LOG_FILE = "logs/twitter-archiver.log"  # Leave empty to not log to a file
-
-
 OPTIONS = Options()
 OPTIONS.headless = _HEADLESS
