@@ -42,7 +42,7 @@ def scrape_tweets(user, seen_tweets):
                             new_tweets.append(n)
                             logger.debug("Found a new tweet: %d" % n)
                 ActionChains(driver).send_keys(Keys.PAGE_DOWN, Keys.PAGE_DOWN).perform()
-                time.sleep(2)
+                time.sleep(4)
                 current_scroll = driver.execute_script("return window.scrollY;")
                 max_scroll = driver.execute_script("return window.scrollMaxY;")
 

@@ -1,6 +1,8 @@
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 COPY requirements.txt docker-entrypoint.sh /
+
+ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y \
     firefox \
@@ -11,6 +13,6 @@ RUN apt-get update && apt-get install -y \
     xvfb \
     && pip3 install --no-cache-dir -r /requirements.txt
 
-COPY / /twitter-archiver
+COPY /src /twitter-archiver
 
 ENTRYPOINT [ "/docker-entrypoint.sh" ]

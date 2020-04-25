@@ -1,0 +1,15 @@
+version: '3'
+services:
+  twitter-archiver:
+    image: 'twitter-archiver:latest'
+    build:
+      context: ./
+    shm_size: 1G
+    stdin_open: true
+    volumes:
+      - db-volume:/db
+      - log-volume:/logs
+
+volumes:
+  db-volume:
+  log-volume:

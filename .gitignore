@@ -6,3 +6,4 @@ logs/
 *.ps1
 *.log
 *.db
+*.swp
