@@ -2,18 +2,14 @@
 Save a user's tweets to the Wayback Machine.
 
 #### Setup
- * Install
- [Firefox](https://www.mozilla.org/en-US/firefox/new/),
- [geckodriver](https://github.com/mozilla/geckodriver/releases)
- and [SQLite](https://sqlite.org/download.html)
- * `git clone git@github.com:Brownies/twitter-archiver.git`
- * `cd twitter-archiver`
- * `pip install -r requirements.txt`(Use `pip3` on Linux/Mac)
- 
+ Install
+ * [Docker](https://docs.docker.com/engine/install/)
+ * [Docker Compose](https://docs.docker.com/compose/install/)
 
 #### Use
  * Set the users whose tweets you want to archive in settings.py
- * `python twitter-archiver.py`(Use `python3` on Linux/Mac)
+ * Rebuild the image with `docker-compose build`
+ * Run the archiver with `docker-compose run twitter-archiver`
 
 #### Notes
 

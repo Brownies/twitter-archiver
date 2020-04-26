@@ -8,7 +8,7 @@ USERS = [
     "michaelmontano",
     "nedsegal"
 ]
-DATABASE_ADDRESS = "sqlite:///twitter-archiver.db"
+DATABASE_ADDRESS = "sqlite:///db/twitter-archiver.db"
 LOG_FILE = "logs/twitter-archiver.log"  # Leave empty to not log to a file
 _HEADLESS = True
 LOG_LEVEL = logging.INFO
