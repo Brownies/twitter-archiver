@@ -18,11 +18,12 @@ def scrape_tweets(user, seen_tweets):
         try:
             driver.set_window_size(BROWSER_WIDTH, BROWSER_HEIGHT)
             driver.get("https://twitter.com/" + user)
-            xpath = "//a[contains(@href, \"/" + user + "/status/\"" + ")]"
+            xpath = "//a[contains(translate(@href, \"ABCDEFGHIJKLMNOPQRSTUVWXYZ\", \"abcdefghijklmnopqrstuvwxyz\"), \"/" + user.lower() + "/status/\"" + ")]"
             WebDriverWait(driver, 5).until(lambda d: d.find_element_by_xpath(xpath))
         except WebDriverException as e:
             logger.error("Could not open page for \"%s\"" % user)
             logger.error(e.msg)
+            driver.save_screenshot("screenshot.png")
             return []
 
         new_tweets = []
